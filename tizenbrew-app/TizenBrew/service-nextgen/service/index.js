@@ -62,7 +62,9 @@ module.exports.onStart = function () {
         }
     });
 
-    const wsServer = new WebSocket.Server({ server: app.listen(8081, "127.0.0.1") });
+    const wsServer = new WebSocket.Server({ server: app.listen(8081, "127.0.0.1", function(err) {
+        if (err) console.error('Failed to listen on port 8081:', err);
+    }) });
 
     let adbClient;
     let canLaunchInDebug = null;
@@ -107,6 +109,8 @@ module.exports.onStart = function () {
                 if (service) startService(service, services);
             });
         }
+    }).catch(err => {
+        console.error('Failed to load modules:', err);
     });
 
 
@@ -127,6 +131,9 @@ module.exports.onStart = function () {
             //Launch app
             const tbPackageId = tizen.application.getAppInfo().packageId;
             const shellCmd = adbClient.createStream(`shell:0 debug ${tbPackageId}.TizenBrewStandalone${isTizen3 ? ' 0' : ''}`);
+            shellCmd.on('error', function(err) {
+                console.error('Shell command error:', err);
+            });
             shellCmd.on('data', function dataIncoming(data) {
                 const dataString = data.toString();
                 if (dataString.includes('debug')) {
@@ -170,6 +177,9 @@ module.exports.onStart = function () {
                         payload.package.substring(0, payload.package.indexOf('/')),
                         payload.package.substring(payload.package.indexOf('/') + 1)
                     ];
+                    if (!modulesCache) {
+                                               return wsConn.send(wsConn.Event(Events.Error, 'Modules not loaded yet.'));
+                    }
                     const module = modulesCache.find(m => m.name === moduleMetadata[1]);
 
                     if (!module) {
@@ -195,7 +205,7 @@ module.exports.onStart = function () {
                             canLaunchInDebug = (json.device.developerIP === '127.0.0.1' || json.device.developerIP === '1.0.0.127') && json.device.developerMode === '1';
                             wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
                         }).catch(err => {
-                            wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
+                            wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug !== null ? canLaunchInDebug : false));
                         });
                     break;
                 }
@@ -213,6 +223,8 @@ module.exports.onStart = function () {
                         loadModules().then(modules => {
                             modulesCache = modules;
                             wsConn.send(wsConn.Event(Events.GetModules, modules));
+                        }).catch(err => {
+                            wsConn.send(wsConn.Event(Events.Error, 'Failed to load modules: ' + err.message));
                         });
                     } else wsConn.send(wsConn.Event(Events.GetModules, modulesCache));
                     break;
@@ -328,6 +340,8 @@ module.exports.onStart = function () {
                     loadModules().then(function(modules) {
                         modulesCache = modules;
                         wsConn.send(wsConn.Event(Events.UpdateModule, null));
+                    }).catch(function(err) {
+                        wsConn.send(wsConn.Event(Events.Error, 'Failed to reload modules: ' + err.message));
                     });
                     break;
                 }
