@@ -11,6 +11,9 @@ function browseModules(installedModuleNames) {
             return res.json();
         })
         .then(registry => {
+            if (!registry || !registry.modules || !Array.isArray(registry.modules)) {
+                return { categories: [], modules: [] };
+            }
             var modulePromises = registry.modules.map(function(mod) {
                 return fetch('https://cdn.jsdelivr.net/' + mod.id + '/package.json')
                     .then(function(res) {

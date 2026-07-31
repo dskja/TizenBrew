@@ -20,7 +20,7 @@ class Connection {
     }
 }
 
-const Events = {
+const Events = Object.freeze({
     Ready: -1,
     AppControlData: 0,
     GetDebugStatus: 1,
@@ -36,7 +36,7 @@ const Events = {
     BrowseModules: 11,
     CheckUpdates: 12,
     UpdateModule: 13
-};
+});
 
 module.exports = {
     Connection,

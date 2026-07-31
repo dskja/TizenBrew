@@ -41,6 +41,7 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
                 } else if (mdl.name !== '' && mdl.evaluateScriptOnDocumentStart) {
                     const cache = modulesCache.get(mdl.fullName);
                     const clientConnection = clientConn.get('wsConn');
+                    if (!clientConnection) return;
                     if (cache) {
                         client.Page.addScriptToEvaluateOnNewDocument({ expression: cache });
                         sendClientInformation(clientConn, clientConnection.Event(Events.LaunchModule, mdl.name));
@@ -78,6 +79,7 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
 
             if (!isAnotherApp) {
                 const clientConnection = clientConn.get('wsConn');
+                if (!clientConnection) return;
                 if (appControlData.module) {
                     const data = clientConnection.Event(Events.CanLaunchModules, {
                         type: 'appControl',
@@ -107,7 +109,8 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
         }).on('error', (err) => {
             if (attempts >= 15) {
                 if (!isAnotherApp) {
-                    clientConn.send(clientConn.Event(Events.Error, 'Failed to connect to the debugger'));
+                    var wsConn2 = clientConn.get('wsConn');
+                    if (wsConn2) wsConn2.send(wsConn2.Event(Events.Error, 'Failed to connect to the debugger'));
                     inDebug.tizenDebug = false;
                     return;
                 } else return;
@@ -118,7 +121,8 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
     } catch (e) {
         if (attempts >= 15) {
             if (!isAnotherApp) {
-                clientConn.send(clientConn.Event(Events.Error, 'Failed to connect to the debugger'));
+                var wsConn3 = clientConn.get('wsConn');
+                if (wsConn3) wsConn3.send(wsConn3.Event(Events.Error, 'Failed to connect to the debugger'));
                 inDebug.tizenDebug = false;
                 return;
             } else return;

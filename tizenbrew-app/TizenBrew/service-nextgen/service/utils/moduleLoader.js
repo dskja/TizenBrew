@@ -7,6 +7,12 @@ function loadModules() {
     const config = readConfig();
     const modules = config.modules;
 
+    function splitModule(module) {
+        var slashIdx = module.indexOf('/');
+        if (slashIdx === -1) return ['', module];
+        return [module.substring(0, slashIdx), module.substring(slashIdx + 1)];
+    }
+
     const modulePromises = modules.map(module => {
         return fetch(`https://cdn.jsdelivr.net/${module}/package.json`)
             .then(res => {
@@ -15,10 +21,7 @@ function loadModules() {
             })
             .then(moduleJson => {
                 let moduleData;
-                const splitData = [
-                    module.substring(0, module.indexOf('/')),
-                    module.substring(module.indexOf('/') + 1)
-                ];
+                const splitData = splitModule(module);
                 const moduleMetadata = {
                     name: splitData[1],
                     type: splitData[0]
@@ -68,10 +71,7 @@ function loadModules() {
             .catch(e => {
                 console.error(e);
 
-                const splitData = [
-                    module.substring(0, module.indexOf('/')),
-                    module.substring(module.indexOf('/') + 1)
-                ];
+                const splitData = splitModule(module);
 
                 const moduleMetadata = {
                     name: splitData[1],
