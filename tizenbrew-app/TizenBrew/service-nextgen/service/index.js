@@ -54,7 +54,11 @@ module.exports.onStart = function () {
                     }
                 });
         } else {
-            res.send(deviceIP);
+            if (deviceIP) {
+                res.send(deviceIP);
+            } else {
+                res.status(503).send('Service not ready');
+            }
         }
     });
 

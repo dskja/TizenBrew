@@ -25,7 +25,7 @@ jobs:
           sudo curl -Lo /usr/bin/ldid https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64
           sudo chmod a+rwx /usr/bin/ldid
           npm install
-          npm install -g @vercel/ncc wgt-to-usb pkg
+          npm install -g @vercel/ncc
           npx babel . --out-dir transpiled --copy-files
           rm -r node_modules
 

@@ -38,11 +38,27 @@ function StoreItem({ module, id, state, isInstalled, hasUpdate }) {
                 payload: true
             });
             state.client.browseModules();
+        } else if (isInstalled) {
+            var confirmUninstall = confirm(t('moduleManager.confirmDelete', { packageName: module.appName }));
+            if (confirmUninstall) {
+                state.client.send({
+                    type: Events.ModuleAction,
+                    payload: {
+                        action: 'remove',
+                        module: module.fullName
+                    }
+                });
+                state.client.send({
+                    type: Events.GetModules,
+                    payload: true
+                });
+                state.client.browseModules();
+            }
         }
     }
 
-    var buttonText = isInstalled ? (hasUpdate ? t('store.update') : t('store.installed')) : t('store.install');
-    var buttonColor = isInstalled ? (hasUpdate ? 'bg-purple-600 hover:bg-purple-500' : 'bg-green-700') : 'bg-indigo-600 hover:bg-indigo-500';
+    var buttonText = isInstalled ? (hasUpdate ? t('store.update') : t('store.uninstall')) : t('store.install');
+    var buttonColor = isInstalled ? (hasUpdate ? 'bg-purple-600 hover:bg-purple-500' : 'bg-red-700 hover:bg-red-600') : 'bg-indigo-600 hover:bg-indigo-500';
 
     return (
         <div
@@ -140,18 +156,19 @@ export default function ModuleStore() {
     const [activeCategory, setActiveCategory] = useState('all');
     const [filteredModules, setFilteredModules] = useState([]);
 
-    var storeData = state?.sharedData?.storeModules;
-    var storeModules = storeData?.modules || [];
-    var categories = storeData?.categories || {};
-    var installedModules = state?.sharedData?.modules || [];
-    var moduleUpdates = state?.sharedData?.moduleUpdates || [];
+    var storeData = state && state.sharedData ? state.sharedData.storeModules : null;
+    var storeModules = (storeData && storeData.modules) || [];
+    var categories = (storeData && storeData.categories) || {};
+    var installedModules = (state && state.sharedData && state.sharedData.modules) || [];
+    var moduleUpdates = (state && state.sharedData && state.sharedData.moduleUpdates) || [];
+    var isLoading = !storeData || !storeData.modules;
 
     useEffect(() => {
-        if (state?.client) {
+        if (state && state.client) {
             state.client.browseModules();
             state.client.checkUpdates();
         }
-    }, [state?.client]);
+    }, [state && state.client]);
 
     useEffect(() => {
         if (!storeModules) return;
@@ -252,12 +269,15 @@ export default function ModuleStore() {
                     </>
                 )}
 
-                {filteredModules.length === 0 && storeModules && storeModules.length > 0 && (
-                    <p className="text-gray-400 text-base/7 mt-8">{t('store.noResults')}</p>
+                {isLoading && (
+                    <div className="flex flex-col items-center gap-4 mt-8">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
+                        <p className="text-gray-400 text-base/7">{t('store.loading')}</p>
+                    </div>
                 )}
 
-                {(!storeModules || storeModules.length === 0) && (
-                    <p className="text-gray-400 text-base/7 mt-8">{t('store.loading')}</p>
+                {filteredModules.length === 0 && storeModules && storeModules.length > 0 && (
+                    <p className="text-gray-400 text-base/7 mt-8">{t('store.noResults')}</p>
                 )}
             </div>
         </div>

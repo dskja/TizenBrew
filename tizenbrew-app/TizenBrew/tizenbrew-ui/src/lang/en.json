@@ -48,6 +48,7 @@
     "store": {
         "install": "Install",
         "installed": "Installed",
+        "uninstall": "Uninstall",
         "update": "Update",
         "updateAll": "Update All",
         "updateAvailable": "Update Available",

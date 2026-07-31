@@ -100,11 +100,15 @@ export default function ModuleManager() {
     }
 
     function handleUpdateAll() {
-        moduleUpdates.forEach(function(u) {
-            if (u.updateAvailable) {
-                state.client.updateModule(u.fullName);
-            }
-        });
+        var toUpdate = moduleUpdates.filter(function(u) { return u.updateAvailable; });
+        var i = 0;
+        function updateNext() {
+            if (i >= toUpdate.length) return;
+            state.client.updateModule(toUpdate[i].fullName);
+            i++;
+            setTimeout(updateNext, 2000);
+        }
+        updateNext();
     }
 
     function handleRefresh() {
