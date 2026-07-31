@@ -5,7 +5,7 @@ const initialState = {
     sharedData: {
         debugStatus: {
             rwiDebug: false,
-            appDebug: false,
+            webDebug: false,
             tizenDebug: false
         },
         modules: null,

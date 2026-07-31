@@ -20,8 +20,10 @@ function Item({ children, module, id, state }) {
   }, [focused, ref]);
 
   function handleOnClick() {
-    for (const key of module.keys) {
-      tizen.tvinputdevice.registerKey(key);
+    if (module.keys) {
+      for (const key of module.keys) {
+        try { tizen.tvinputdevice.registerKey(key); } catch (e) {}
+      }
     }
 
     state.client.send({

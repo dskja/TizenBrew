@@ -22,16 +22,16 @@ const UserAgents = [
                     return res.json();
                 })
                 .then(apiData => {
-                    const firmware = tizen.systeminfo.getCapability('http://tizen.org/custom/sw_version'),
+                    var firmware = tizen.systeminfo.getCapability('http://tizen.org/custom/sw_version'),
                         model = tizen.systeminfo.getCapability('http://tizen.org/system/model_name'),
-                        chipsetModel = apiData.device.model.split('_')[1],
+                        chipsetModel = (apiData.device && apiData.device.model) ? apiData.device.model.split('_')[1] : 'unknown',
                         deviceName = `_TV_${chipsetModel}`,
                         newUserAgent = `${window.navigator.userAgent}, ${deviceName}/${firmware} (Samsung, ${model}, Wired)`;
 
                     return newUserAgent;
                 })
                 .catch(e => {
-                    alert(t('settings.uaFetchFailed') + ': ' + e);
+                    alert(t('settings.uaFetchFailed') + ': ' + e.message);
                     return null;
                 });
         }

@@ -16,14 +16,17 @@ window.addEventListener('keydown', (e) => {
             history.back();
             setFocus('sn:focusable-item-1');
         } else {
-            tizen.application.getCurrentApplication().exit();
+            try { tizen.application.getCurrentApplication().exit(); } catch (e) {}
         }
     } else if (e.keyCode === 38) {
         window.shouldDisableAutoLaunch = true;
     }
 });
 try {
-    if (localStorage.getItem('userAgent')) tizen.websetting.setUserAgentString(localStorage.getItem('userAgent'));
+    if (localStorage.getItem('userAgent') && tizen.websetting) tizen.websetting.setUserAgentString(localStorage.getItem('userAgent'), function() {});
+}
+catch (e) {}
+try {
     tizen.tvinputdevice.registerKey("ColorF0Red");
     tizen.tvinputdevice.registerKey("ColorF1Green");
     tizen.tvinputdevice.registerKey("ColorF2Yellow");

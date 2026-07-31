@@ -54,34 +54,39 @@ class Client {
 
     onOpen() {
         this.retryCount = 0;
-        const data = tizen.application.getCurrentApplication().getRequestedAppControl().appControl.data;
-        if (data.length > 0 && data[0].value.length > 0) {
-            // TizenBrew allows other apps to launch a specific module outside of the TizenBrew app.
-            try {
-                const parsedData = JSON.parse(data[0].value[0]);
-                const moduleName = parsedData.moduleName;
-                const moduleType = parsedData.moduleType;
-                const args = parsedData.args;
+        try {
+            var data = tizen.application.getCurrentApplication().getRequestedAppControl().appControl.data;
+            if (data.length > 0 && data[0].value.length > 0) {
+                try {
+                    const parsedData = JSON.parse(data[0].value[0]);
+                    const moduleName = parsedData.moduleName;
+                    const moduleType = parsedData.moduleType;
+                    const args = parsedData.args;
 
-                if (!moduleName || !moduleType) {
-                    return this.send({
+                    if (!moduleName || !moduleType) {
+                        return this.send({
+                            type: Events.GetDebugStatus
+                        });
+                    }
+
+                    this.send({
+                        type: Events.AppControlData,
+                        payload: {
+                            package: `${moduleType}/${moduleName}`,
+                            args
+                        }
+                    });
+                } catch (e) {
+                    this.send({
                         type: Events.GetDebugStatus
                     });
                 }
-
-                this.send({
-                    type: Events.AppControlData,
-                    payload: {
-                        package: `${moduleType}/${moduleName}`,
-                        args
-                    }
-                });
-            } catch (e) {
+            } else {
                 this.send({
                     type: Events.GetDebugStatus
                 });
             }
-        } else {
+        } catch (e) {
             this.send({
                 type: Events.GetDebugStatus
             });
@@ -106,14 +111,12 @@ class Client {
             }
 
             case Events.GetDebugStatus: {
-                const state = this.context.state;
-                state.sharedData.debugStatus = payload;
                 this.context.dispatch({
-                    type: 'SET_SHARED_DATA',
-                    payload: state.sharedData
+                    type: 'SET_DEBUG_STATUS',
+                    payload: payload
                 });
 
-                if (!payload.rwiDebug && !payload.appDebug && !payload.tizenDebug) {
+                if (!payload.rwiDebug && !payload.webDebug && !payload.tizenDebug) {
                     this.send({
                         type: Events.CanLaunchInDebug
                     });
@@ -128,7 +131,8 @@ class Client {
 
             case Events.CanLaunchInDebug: {
                 if (payload) {
-                    const tvIP = webapis.network.getIp();
+                    var tvIP = '';
+                    try { tvIP = webapis.network.getIp(); } catch (e) {}
                     this.send({
                         type: Events.ReLaunchInDebug,
                         payload: {
@@ -136,7 +140,7 @@ class Client {
                         }
                     });
 
-                    tizen.application.getCurrentApplication().exit();
+                    try { tizen.application.getCurrentApplication().exit(); } catch (e) {}
                 } else if (payload === null) {
                     this.send({
                         type: Events.CanLaunchInDebug
@@ -193,11 +197,17 @@ class Client {
             }
 
             case Events.LaunchModule: {
+                if (!this.modulesLoaded) {
+                    this.pendingEvents.push({ type, payload });
+                    break;
+                }
                 const module = this.modules.find(mdl => mdl.fullName === payload);
 
                 if (module) {
-                    for (const key of module.keys) {
-                        tizen.tvinputdevice.registerKey(key);
+                    if (module.keys) {
+                        for (const key of module.keys) {
+                            try { tizen.tvinputdevice.registerKey(key); } catch (e) {}
+                        }
                     }
 
                     location.href = module.appPath;
@@ -230,8 +240,8 @@ class Client {
     }
 
     handleCanLaunchModules(payload) {
-        const debugStatus = this.context.state.sharedData.debugStatus;
-        debugStatus.webDebug = true;
+        var debugStatus = this.context.state.sharedData.debugStatus;
+        debugStatus = Object.assign({}, debugStatus, { webDebug: true });
         this.context.dispatch({
             type: 'SET_DEBUG_STATUS',
             payload: debugStatus
@@ -253,8 +263,10 @@ class Client {
                     });
                     return;
                 }
-                for (const key of module.keys) {
-                    tizen.tvinputdevice.registerKey(key);
+                if (module.keys) {
+                    for (const key of module.keys) {
+                        try { tizen.tvinputdevice.registerKey(key); } catch (e) {}
+                    }
                 }
 
                 this.send({
@@ -268,8 +280,10 @@ class Client {
             }
             else if (payload.type === 'appControl') {
                 const module = payload.module;
-                for (const key of module.keys) {
-                    tizen.tvinputdevice.registerKey(key);
+                if (module && module.keys) {
+                    for (const key of module.keys) {
+                        try { tizen.tvinputdevice.registerKey(key); } catch (e) {}
+                    }
                 }
 
                 this.send({
@@ -277,7 +291,7 @@ class Client {
                     payload: module
                 });
 
-                module.appPath.includes('?') ? location.href = `${module.appPath}&${payload.args}` : location.href = `${module.appPath}?${payload.args}`;
+                module.appPath.indexOf('?') !== -1 ? location.href = module.appPath + '&' + payload.args : location.href = module.appPath + '?' + payload.args;
             }
         }
     }

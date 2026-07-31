@@ -32,7 +32,7 @@ try {
   i18n
     .use(initReactI18next)
     .init({
-      lng: navigator.language.replace(/[_-].*/, ''),
+      lng: navigator.language.replace(/_/g, '-').toLowerCase(),
       fallbackLng: 'en',
       resources,
       debug: false,

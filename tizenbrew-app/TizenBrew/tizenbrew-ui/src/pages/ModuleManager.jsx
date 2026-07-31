@@ -135,7 +135,7 @@ export default function ModuleManager() {
                 </button>
             </div>
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
-                {state?.sharedData?.modules?.map((module, moduleIdx) => (
+                {state && state.sharedData && state.sharedData.modules && state.sharedData.modules.map((module, moduleIdx) => (
                     <Item key={moduleIdx} module={module} id={moduleIdx} state={state} hasUpdate={hasModuleUpdate(module.fullName)}>
                         <h3
                             className='text-indigo-400 text-base/7 font-semibold'
