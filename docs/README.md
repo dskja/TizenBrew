@@ -1,6 +1,6 @@
 # TizenBrew
 
-Welcome to TizenBrew! TizenBrew is a way to experience modded websites (like [TizenTube](https://github.com/reisxd/TizenTube)) and you can install newer apps without having to deal with Tizen Studio multiple times.
+Welcome to TizenBrew! TizenBrew is a way to experience modded websites (like [TizenTube](https://github.com/dskja/TizenTube)) and you can install newer apps without having to deal with Tizen Studio multiple times.
 
 TizenBrew is a modular system, meaning you can install new modded websites and apps without having to mess with Tizen Studio.
 
@@ -24,7 +24,7 @@ This is the easiest method and works on every Samsung TV released since 2017.
 For more details, see [Step 1 here under “Connecting the TV and SDK”](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html#Connecting-the-TV-and-SDK).
 
 #### 2. Download and run TizenBrew Installer Desktop on your PC
-1. Download the [latest executable file for your OS](https://github.com/reisxd/TizenBrewInstaller/releases/latest) from the TizenBrewInstaller repository.
+1. Download the [latest executable file for your OS](https://github.com/dskja/TizenBrewInstaller/releases/latest) from the TizenBrewInstaller repository.
 2. Run the executable
 
 If you're on macOS or Linux, you may need to run the file from the terminal and may need to run `chmod +x tizenbrew-installer-os-arch`
@@ -48,7 +48,7 @@ This method is now deprecated as USB Demo Packages cannot be made anymore due to
 
 2. Connect to your TV using this [guide](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html).
 
-3. Download the latest TizenBrew Widget from the [releases page](https://github.com/reisxd/TizenBrew/releases).
+3. Download the latest TizenBrew Widget from the [releases page](https://github.com/dskja/TizenBrew/releases).
 
 4. Check if the TV is connected by running:
 ```bash
@@ -77,7 +77,7 @@ You also need to have a Samsung certificate. First connect to your TV by followi
 
 You can create a Samsung certificate by following [this](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/creating-certificates.html). 
 
-You'll also need to have the TizenBrew package. You can download the TizenBrew package from the [releases page](https://github.com/reisxd/TizenBrew/releases/latest).
+You'll also need to have the TizenBrew package. You can download the TizenBrew package from the [releases page](https://github.com/dskja/TizenBrew/releases/latest).
 
 After you have all the requirements, you can resign TizenBrew by following these steps:
 
@@ -104,9 +104,9 @@ tizen install -n ./resigned/TizenBrewStandalone.wgt
 
 To rebuild TizenBrew, you need to have Node.js installed on your system. You can install Node.js from [here](https://nodejs.org/). You also need to have Tizen Studio installed on your system. You can install Tizen Studio from [here](https://developer.samsung.com/smarttv/develop/getting-started/setting-up-sdk/installing-tv-sdk.html).
 
-1. Download the source code from the [releases page](https://github.com/reisxd/TizenBrew/releases/latest) (zip file) or clone the repository by running:
+1. Download the source code from the [releases page](https://github.com/dskja/TizenBrew/releases/latest) (zip file) or clone the repository by running:
 ```bash
-git clone https://github.com/reisxd/TizenBrew.git
+git clone https://github.com/dskja/TizenBrew.git
 ```
 
 2. Open up the `tizenbrew-app/TizenBrew/service-nextgen/service` folder in a terminal and run:

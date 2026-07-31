@@ -32,7 +32,7 @@ try {
   i18n
     .use(initReactI18next)
     .init({
-      lng: navigator.language.replace(/(\-.*)/g, '_'),
+      lng: navigator.language.replace(/(\-.*)/g, ''),
       fallbackLng: 'en',
       resources,
       debug: true,

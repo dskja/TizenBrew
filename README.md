@@ -6,7 +6,7 @@
     <sub> TizenBrew logo, banner and README by <a href="https://github.com/Zyborg777">@Zyborg777</a> </sub>
 </p>
 
-### Experience your favorite custom apps (such as [TizenTube](https://github.com/reisxd/TizenTube)) in a whole new way!
+### Experience your favorite custom apps (such as [TizenTube](https://github.com/dskja/TizenTube)) in a whole new way!
 Thanks to TizenBrew, you can install newer apps without having to deal with Tizen Studio multiple times. Just one click
 and you're done 🎊
 

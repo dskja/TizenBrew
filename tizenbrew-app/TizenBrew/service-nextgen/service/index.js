@@ -20,7 +20,7 @@ module.exports.onStart = function () {
 
 
     const app = express();
-    let deviceIP;
+    let deviceIP = '';
     const isTizen3 = tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version').startsWith('3.0');
 
     // HTTP Proxy for modules 
