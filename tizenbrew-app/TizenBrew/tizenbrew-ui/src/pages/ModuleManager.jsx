@@ -92,7 +92,7 @@ export default function ModuleManager() {
         <div className="relative isolate lg:px-8">
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
                 {state?.sharedData?.modules?.map((module, moduleIdx) => (
-                    <Item module={module} id={moduleIdx} state={state}>
+                    <Item key={moduleIdx} module={module} id={moduleIdx} state={state}>
                         <h3
                             className='text-indigo-400 text-base/7 font-semibold'
                         >

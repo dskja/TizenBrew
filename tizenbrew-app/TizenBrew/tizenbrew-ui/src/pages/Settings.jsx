@@ -22,11 +22,11 @@ function ItemBasic({ children, onClick, shouldFocus }) {
 
     }, [focused, ref]);
 
-    if (shouldFocus) {
-        useEffect(() => {
+    useEffect(() => {
+        if (shouldFocus) {
             focusSelf();
-        }, [ref]);
-    }
+        }
+    }, [ref, shouldFocus, focusSelf]);
 
     return (
         <div

@@ -12,7 +12,7 @@ const initialState = {
         state: null,
         error: {
             message: null,
-            dissapear: false
+            disappear: false
         }
     },
     client: null

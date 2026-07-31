@@ -16,16 +16,40 @@ const Events = {
 class Client {
     constructor(context) {
         this.context = context;
-        this.socket = new WebSocket('ws://localhost:8081');
-        this.socket.onopen = this.onOpen.bind(this);
-        this.socket.onmessage = this.onMessage.bind(this);
-        this.socket.onerror = () => location.reload();
+        this.retryCount = 0;
+        this.maxRetries = 5;
         this.pendingEvents = [];
         this.modulesLoaded = false;
         this.modules = [];
+        this.connect();
+    }
+
+    connect() {
+        this.socket = new WebSocket('ws://localhost:8081');
+        this.socket.onopen = this.onOpen.bind(this);
+        this.socket.onmessage = this.onMessage.bind(this);
+        this.socket.onerror = this.onError.bind(this);
+        this.socket.onclose = this.onClose.bind(this);
+    }
+
+    onError() {
+        if (this.retryCount < this.maxRetries) {
+            this.retryCount++;
+            setTimeout(() => this.connect(), 2000);
+        } else {
+            location.reload();
+        }
+    }
+
+    onClose() {
+        if (this.retryCount < this.maxRetries) {
+            this.retryCount++;
+            setTimeout(() => this.connect(), 2000);
+        }
     }
 
     onOpen() {
+        this.retryCount = 0;
         const data = tizen.application.getCurrentApplication().getRequestedAppControl().appControl.data;
         if (data.length > 0 && data[0].value.length > 0) {
             // TizenBrew allows other apps to launch a specific module outside of the TizenBrew app.
