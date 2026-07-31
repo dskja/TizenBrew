@@ -16,6 +16,7 @@ function startService(mdl, services) {
     sandbox['require'] = require;
     sandbox['tizen'] = global.tizen;
     sandbox['module'] = { exports: {} };
+    sandbox['console'] = console;
 
     fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.serviceFile}`)
         .then(res => {

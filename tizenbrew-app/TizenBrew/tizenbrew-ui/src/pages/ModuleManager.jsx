@@ -178,7 +178,7 @@ function AddModule() {
     return (
         <div className="relative isolate lg:px-8">
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
-                <ItemBasic>
+                <ItemBasic onClick={() => ref.current && ref.current.focus()}>
                     <input
                         type="text"
                         ref={ref}
@@ -194,11 +194,11 @@ function AddModule() {
                                         module: `${loc.query.type}/${name}`
                                     }
                                 });
+                                state.client.send({
+                                    type: Events.GetModules,
+                                    payload: true
+                                });
                             }
-                            state.client.send({
-                                type: Events.GetModules,
-                                payload: true
-                            });
                             loc.route('/tizenbrew-ui/dist/index.html/module-manager');
                             setFocus('sn:focusable-item-1');
                         }}

@@ -1,8 +1,7 @@
-import { setFocus, useFocusable } from '@noriginmedia/norigin-spatial-navigation'
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useFocusable } from '@noriginmedia/norigin-spatial-navigation'
+import { useEffect, useContext, useState } from 'react';
 import { GlobalStateContext } from '../components/ClientContext.jsx';
 import { Events } from '../components/WebSocketClient.js';
-import { useLocation } from 'preact-iso';
 import { useTranslation } from 'react-i18next';
 
 function classNames(...classes) {
@@ -70,7 +69,7 @@ function StoreItem({ module, id, state, isInstalled, hasUpdate }) {
                 )}
                 {module.category && (
                     <span className="text-xs bg-slate-700 text-gray-300 px-2 py-1 rounded-full">
-                        {t('store.category.' + module.category) || module.category}
+                        {t('store.category.' + module.category) !== 'store.category.' + module.category ? t('store.category.' + module.category) : module.category}
                     </span>
                 )}
             </div>
@@ -257,7 +256,7 @@ export default function ModuleStore() {
                     <p className="text-gray-400 text-base/7 mt-8">{t('store.noResults')}</p>
                 )}
 
-                {storeModules.length === 0 && (
+                {(!storeModules || storeModules.length === 0) && (
                     <p className="text-gray-400 text-base/7 mt-8">{t('store.loading')}</p>
                 )}
             </div>

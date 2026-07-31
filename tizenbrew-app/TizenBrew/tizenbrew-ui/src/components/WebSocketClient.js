@@ -89,7 +89,12 @@ class Client {
     }
 
     onMessage(event) {
-        const data = JSON.parse(event.data);
+        let data;
+        try {
+            data = JSON.parse(event.data);
+        } catch (e) {
+            return;
+        }
         const { type, payload } = data;
 
         switch (type) {
@@ -219,6 +224,8 @@ class Client {
                 this.send({ type: Events.CheckUpdates });
                 break;
             }
+            default:
+                break;
         }
     }
 
@@ -285,7 +292,9 @@ class Client {
     }
 
     send(data) {
-        this.socket.send(JSON.stringify(data));
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+            this.socket.send(JSON.stringify(data));
+        }
     }
 
     browseModules() {

@@ -9,7 +9,8 @@ init({ });
 window.shouldDisableAutoLaunch = false;
 window.addEventListener('keydown', (e) => {
     if (e.keyCode === 13) {
-        document.querySelector('.focus')?.click();
+        var focusedEl = document.querySelector('.focus');
+        if (focusedEl) focusedEl.click();
     } else if (e.keyCode === 10009) {
         if (location.pathname !== '/tizenbrew-ui/dist/index.html') {
             history.back();

@@ -33,8 +33,18 @@ module.exports.onStart = function () {
             const moduleName = decodeURIComponent(encodedModuleName);
             fetch(`https://cdn.jsdelivr.net/${moduleName}/${req.url.replace(`/module/${encodedModuleName}/`, '')}`)
                 .then(fetchRes => {
+                    if (!fetchRes.ok) {
+                        if (!res.headersSent) res.status(fetchRes.status).send('Module fetch failed');
+                        return;
+                    }
                     res.setHeader('Access-Control-Allow-Origin', '*');
-                    res.type(path.basename(req.url.replace(`/module/${encodedModuleName}/`, '')).split('.').slice(-1)[0].split('?')[0]);
+                    var filePath = req.url.replace(`/module/${encodedModuleName}/`, '');
+                    var ext = path.extname(filePath).slice(1).split('?')[0];
+                    if (ext) {
+                        res.type(ext);
+                    } else {
+                        res.setHeader('Content-Type', 'application/octet-stream');
+                    }
                     return fetchRes.body.pipe(res);
                 })
                 .catch(err => {
@@ -52,7 +62,10 @@ module.exports.onStart = function () {
 
     let adbClient;
     let canLaunchInDebug = null;
-    fetch('http://127.0.0.1:8001/api/v2/').then(res => res.json())
+    fetch('http://127.0.0.1:8001/api/v2/').then(res => {
+        if (!res.ok) throw new Error('API v2 returned ' + res.status);
+        return res.json();
+    })
         .then(json => {
             canLaunchInDebug = (json.device.developerIP === '127.0.0.1' || json.device.developerIP === '1.0.0.127') && json.device.developerMode === '1';
         }).catch(err => {
@@ -170,7 +183,10 @@ module.exports.onStart = function () {
                     break;
                 }
                 case Events.CanLaunchInDebug: {
-                    fetch('http://127.0.0.1:8001/api/v2/').then(res => res.json())
+                    fetch('http://127.0.0.1:8001/api/v2/').then(res => {
+                        if (!res.ok) throw new Error('API v2 returned ' + res.status);
+                        return res.json();
+                    })
                         .then(json => {
                             canLaunchInDebug = (json.device.developerIP === '127.0.0.1' || json.device.developerIP === '1.0.0.127') && json.device.developerMode === '1';
                             wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
@@ -227,7 +243,8 @@ module.exports.onStart = function () {
                 }
                 case Events.StartService: {
                     const mdl = payload;
-                    if (payload.serviceFile && services.has(mdl.fullName)) {
+                    if (!mdl.serviceFile) break;
+                    if (services.has(mdl.fullName)) {
                         if (services.get(mdl.fullName).hasCrashed) {
                             services.delete(mdl.fullName);
                             startService(mdl, services);
