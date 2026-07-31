@@ -17,7 +17,7 @@
       "featured": true
     },
     {
-      "id": "npm/@dskja/tizentwitch",
+      "id": "npm/tizentwitch",
       "name": "TizenTwitch",
       "description": "Twitch mod for Tizen TVs with ad blocking, chat support, and Twitch theme",
       "category": "video",

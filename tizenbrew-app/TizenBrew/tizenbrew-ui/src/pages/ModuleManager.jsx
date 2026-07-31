@@ -93,7 +93,7 @@ export default function ModuleManager() {
     const loc = useLocation();
     const { t } = useTranslation();
 
-    var moduleUpdates = state?.sharedData?.moduleUpdates || [];
+    var moduleUpdates = (state && state.sharedData && state.sharedData.moduleUpdates) || [];
 
     function hasModuleUpdate(fullName) {
         return moduleUpdates.some(function(u) { return u.fullName === fullName && u.updateAvailable; });

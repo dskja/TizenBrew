@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 export default function About() {
     const { t } = useTranslation();
-    const tizenVersion = tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version');
-    const tvModel = tizen.systeminfo.getCapability('http://tizen.org/system/model_name');
-    const appVersion = tizen.application.getCurrentApplication().appInfo.version;
+    const tizenVersion = tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version') || 'Unknown';
+    const tvModel = tizen.systeminfo.getCapability('http://tizen.org/system/model_name') || 'Unknown';
+    const appVersion = tizen.application.getCurrentApplication().appInfo.version || 'Unknown';
     
     return (
         <div className="flex justify-center align-center">

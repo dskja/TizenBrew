@@ -17,7 +17,10 @@ const UserAgents = [
         name: 'settings.uaBasedOnDevice',
         userAgent: () => {
             return fetch('http://127.0.0.1:8001/api/v2/')
-                .then(res => res.json())
+                .then(res => {
+                    if (!res.ok) throw new Error('API v2 returned ' + res.status);
+                    return res.json();
+                })
                 .then(apiData => {
                     const firmware = tizen.systeminfo.getCapability('http://tizen.org/custom/sw_version'),
                         model = tizen.systeminfo.getCapability('http://tizen.org/system/model_name'),
@@ -28,7 +31,7 @@ const UserAgents = [
                     return newUserAgent;
                 })
                 .catch(e => {
-                    alert('Failed to parse API response: ' + e);
+                    alert(t('settings.uaFetchFailed') + ': ' + e);
                     return null;
                 });
         }
