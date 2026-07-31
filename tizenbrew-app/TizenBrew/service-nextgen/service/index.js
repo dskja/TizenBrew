@@ -31,11 +31,15 @@ module.exports.onStart = function () {
             const moduleName = decodeURIComponent(encodedModuleName);
             fetch(`https://cdn.jsdelivr.net/${moduleName}/${req.url.replace(`/module/${encodedModuleName}/`, '')}`)
                 .then(fetchRes => {
-                    return fetchRes.body.pipe(res);
-                })
-                .then(() => {
                     res.setHeader('Access-Control-Allow-Origin', '*');
                     res.type(path.basename(req.url.replace(`/module/${encodedModuleName}/`, '')).split('.').slice(-1)[0].split('?')[0]);
+                    return fetchRes.body.pipe(res);
+                })
+                .catch(err => {
+                    console.error('Module proxy error:', err);
+                    if (!res.headersSent) {
+                        res.status(500).send('Module proxy error');
+                    }
                 });
         } else {
             res.send(deviceIP);
@@ -49,6 +53,8 @@ module.exports.onStart = function () {
     fetch('http://127.0.0.1:8001/api/v2/').then(res => res.json())
         .then(json => {
             canLaunchInDebug = (json.device.developerIP === '127.0.0.1' || json.device.developerIP === '1.0.0.127') && json.device.developerMode === '1';
+        }).catch(err => {
+            console.error('Failed to check debug mode:', err);
         });
     const inDebug = {
         tizenDebug: false,
@@ -88,7 +94,7 @@ module.exports.onStart = function () {
     function createAdbConnection(ip, mdl) {
         deviceIP = ip;
         if (adbClient) {
-            if (!adbClient._stream) {
+            if (adbClient._stream) {
                 adbClient._stream.removeAllListeners('connect');
                 adbClient._stream.removeAllListeners('error');
                 adbClient._stream.removeAllListeners('close');
@@ -164,8 +170,10 @@ module.exports.onStart = function () {
                     fetch('http://127.0.0.1:8001/api/v2/').then(res => res.json())
                         .then(json => {
                             canLaunchInDebug = (json.device.developerIP === '127.0.0.1' || json.device.developerIP === '1.0.0.127') && json.device.developerMode === '1';
+                            wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
+                        }).catch(err => {
+                            wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
                         });
-                    wsConn.send(wsConn.Event(Events.CanLaunchInDebug, canLaunchInDebug));
                     break;
                 }
                 case Events.ReLaunchInDebug: {
