@@ -113,7 +113,7 @@ git clone https://github.com/dskja/TizenBrew.git
 
 ```bash
 npm install
-npx @vercel/ncc build index.js
+npm run build
 ```
 
 3. Open up the `tizenbrew-app/TizenBrew/tizenbrew-ui` folder in a terminal and run:

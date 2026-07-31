@@ -18,7 +18,10 @@ function startService(mdl, services) {
     sandbox['module'] = { exports: {} };
 
     fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.serviceFile}`)
-        .then(res => res.text())
+        .then(res => {
+            if (!res.ok) throw new Error(`Failed to fetch service ${mdl.fullName}: ${res.status}`);
+            return res.text();
+        })
         .then(script => {
             services.set(mdl.fullName, {
                 context: vm.createContext(sandbox),

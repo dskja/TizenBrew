@@ -16,24 +16,21 @@ const UserAgents = [
     {
         name: 'settings.uaBasedOnDevice',
         userAgent: () => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://127.0.0.1:8001/api/v2/", false);
-            xhr.send();
+            return fetch('http://127.0.0.1:8001/api/v2/')
+                .then(res => res.json())
+                .then(apiData => {
+                    const firmware = tizen.systeminfo.getCapability('http://tizen.org/custom/sw_version'),
+                        model = tizen.systeminfo.getCapability('http://tizen.org/system/model_name'),
+                        chipsetModel = apiData.device.model.split('_')[1],
+                        deviceName = `_TV_${chipsetModel}`,
+                        newUserAgent = `${window.navigator.userAgent}, ${deviceName}/${firmware} (Samsung, ${model}, Wired)`;
 
-            let apiData = {};
-            try {
-                apiData = JSON.parse(xhr.responseText);
-            } catch (e) {
-                alert("Failed to parse API response:", e);
-            }
-
-            const firmware = tizen.systeminfo.getCapability("http://tizen.org/custom/sw_version"),
-                model = tizen.systeminfo.getCapability("http://tizen.org/system/model_name"),
-                chipsetModel = apiData.device.model.split('_')[1],
-                deviceName = `_TV_${chipsetModel}`,
-                newUserAgent = `${window.navigator.userAgent}, ${deviceName}/${firmware} (Samsung, ${model}, Wired)`;
-
-            return newUserAgent;
+                    return newUserAgent;
+                })
+                .catch(e => {
+                    alert('Failed to parse API response: ' + e);
+                    return null;
+                });
         }
     }
 ];
@@ -82,11 +79,22 @@ export default function UserAgentSettings() {
                 {UserAgents.map((ua, idx) => {
                     return (
                         <ItemBasic key={idx} onClick={() => {
-                            const userAgent = typeof ua.userAgent === 'function' ? ua.userAgent() : ua.userAgent;
-                            if (confirm(`${t('settings.setUaTo', { userAgent: userAgent })}\n\n${t('settings.uaNegativeEffects')}`)) {
-                                localStorage.setItem('userAgent', userAgent);
-                                alert(t('settings.uaSetRelaunch'));
-                                tizen.application.getCurrentApplication().exit();
+                            const uaValue = typeof ua.userAgent === 'function' ? null : ua.userAgent;
+                            if (uaValue !== null) {
+                                if (confirm(`${t('settings.setUaTo', { userAgent: uaValue })}\n\n${t('settings.uaNegativeEffects')}`)) {
+                                    localStorage.setItem('userAgent', uaValue);
+                                    alert(t('settings.uaSetRelaunch'));
+                                    tizen.application.getCurrentApplication().exit();
+                                }
+                            } else {
+                                ua.userAgent().then(uaResult => {
+                                    if (!uaResult) return;
+                                    if (confirm(`${t('settings.setUaTo', { userAgent: uaResult })}\n\n${t('settings.uaNegativeEffects')}`)) {
+                                        localStorage.setItem('userAgent', uaResult);
+                                        alert(t('settings.uaSetRelaunch'));
+                                        tizen.application.getCurrentApplication().exit();
+                                    }
+                                });
                             }
                         }} shouldFocus={idx === 0}>
                             <h3 className='text-indigo-400 text-base/7 font-semibold'>

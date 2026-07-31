@@ -33,18 +33,19 @@ class Client {
     }
 
     onError() {
+        this.handleDisconnect();
+    }
+
+    onClose() {
+        this.handleDisconnect();
+    }
+
+    handleDisconnect() {
         if (this.retryCount < this.maxRetries) {
             this.retryCount++;
             setTimeout(() => this.connect(), 2000);
         } else {
             location.reload();
-        }
-    }
-
-    onClose() {
-        if (this.retryCount < this.maxRetries) {
-            this.retryCount++;
-            setTimeout(() => this.connect(), 2000);
         }
     }
 

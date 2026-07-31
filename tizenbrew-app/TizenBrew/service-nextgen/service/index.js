@@ -21,7 +21,7 @@ module.exports.onStart = function () {
 
     const app = express();
     let deviceIP = '';
-    const isTizen3 = tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version').startsWith('3.0');
+    const isTizen3 = (tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version') || '').startsWith('3.0');
 
     // HTTP Proxy for modules 
     app.all('*', (req, res) => {
@@ -129,7 +129,8 @@ module.exports.onStart = function () {
 
     wsServer.on('connection', (ws) => {
         const wsConn = new Connection(ws);
-        for (const event of queuedEvents) {
+        const eventsToSend = queuedEvents.slice();
+        for (const event of eventsToSend) {
             wsConn.send(event);
             queuedEvents.splice(queuedEvents.indexOf(event), 1);
         }

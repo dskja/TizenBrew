@@ -22,7 +22,10 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
                     if (cache) {
                         client.Runtime.evaluate({ expression: cache, contextId: msg.context.id });
                     } else {
-                        fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.mainFile}`).then(res => res.text()).then(modFile => {
+                        fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.mainFile}`).then(res => {
+                            if (!res.ok) throw new Error(`Failed to fetch module file: ${res.status}`);
+                            return res.text();
+                        }).then(modFile => {
                             modulesCache.set(mdl.fullName, modFile);
                             client.Runtime.evaluate({ expression: modFile, contextId: msg.context.id });
                         }).catch(e => {
@@ -36,7 +39,10 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
                         client.Page.addScriptToEvaluateOnNewDocument({ expression: cache });
                         sendClientInformation(clientConn, clientConnection.Event(Events.LaunchModule, mdl.name));
                     } else {
-                        fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.mainFile}`).then(res => res.text()).then(modFile => {
+                        fetch(`https://cdn.jsdelivr.net/${mdl.fullName}/${mdl.mainFile}`).then(res => {
+                            if (!res.ok) throw new Error(`Failed to fetch module file: ${res.status}`);
+                            return res.text();
+                        }).then(modFile => {
                             modulesCache.set(mdl.fullName, modFile);
                             sendClientInformation(clientConn, clientConnection.Event(Events.LaunchModule, mdl.name));
                             client.Page.addScriptToEvaluateOnNewDocument({ expression: modFile });

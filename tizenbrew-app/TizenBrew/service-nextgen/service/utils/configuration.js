@@ -5,7 +5,7 @@ const fs = require('fs');
 function readConfig() {
     if (!fs.existsSync('/home/owner/share/tizenbrewConfig.json')) {
         return {
-            modules: ["npm/@foxreis/tizentube"],
+            modules: ["npm/@dskja/tizentube"],
             autoLaunchServiceList: [],
             autoLaunchModule: '', 
         };

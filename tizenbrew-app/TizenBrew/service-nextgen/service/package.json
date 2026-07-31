@@ -1,13 +1,13 @@
 {
   "name": "service",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.1.0",
+  "description": "TizenBrew backend service - module loading, debugging, and WebSocket communication",
   "main": "index.js",
   "scripts": {
     "build": "babel . --out-dir transpiled --copy-files && npx @vercel/ncc build transpiled/index.js -o ./dist"
   },
   "keywords": [],
-  "author": "",
+  "author": "dskja",
   "license": "GPL-3.0-only",
   "dependencies": {
     "adbhost": "^0.0.2",

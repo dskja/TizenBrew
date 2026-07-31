@@ -40,6 +40,11 @@
         "language": "Language Settings",
         "languageDesc": "Change the language of the app."
     },
+    "about": {
+        "appVersion": "App Version",
+        "tizenVersion": "Tizen Version",
+        "tvModel": "TV Model"
+    },
     "__contributors": [
         "dskja"
     ]

@@ -7,10 +7,10 @@ try {
     i18n
       .use(initReactI18next)
       .init({
-        lng: locale.language.replace(/(\_.*)/g, ''),
+        lng: locale.language.replace(/[_-].*/, ''),
         fallbackLng: 'en',
         resources,
-        debug: true,
+        debug: false,
         interpolation: {
           escapeValue: false,
         }
@@ -19,10 +19,10 @@ try {
     i18n
       .use(initReactI18next)
       .init({
-        lng: navigator.language.replace(/(\-.*)/g, ''),
+        lng: navigator.language.replace(/[_-].*/, ''),
         fallbackLng: 'en',
         resources,
-        debug: true,
+        debug: false,
         interpolation: {
           escapeValue: false,
         }
@@ -32,10 +32,10 @@ try {
   i18n
     .use(initReactI18next)
     .init({
-      lng: navigator.language.replace(/(\-.*)/g, ''),
+      lng: navigator.language.replace(/[_-].*/, ''),
       fallbackLng: 'en',
       resources,
-      debug: true,
+      debug: false,
       interpolation: {
         escapeValue: false,
       }

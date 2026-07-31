@@ -20,11 +20,11 @@ Site modification modules are basically the same as application modules, but the
 - `packageType`: The type of the module. Should be `mods`
 - `appName`: The name of the module (user friendly, like "TizenTube").
 - `websiteURL`: The URL of the website.
-- `serviceFile`: The main JavaScript file of the service. Used if exists.
 - `main`: The JavaScript file to be injected to the website.
 - `keys`: The keys that should be registered using the [TVInputDevice](https://developer.samsung.com/smarttv/develop/api-references/tizen-web-device-api-references/tvinputdevice-api.html) API.
-- `serviceFile`: The main JavaScript file of the service (NodeJS).
+- `serviceFile`: The main JavaScript file of the service (NodeJS). Used if exists.
+- `evaluateScriptOnDocumentStart`: Whether to evaluate the script on document start. (Before the page is fully loaded)
 
 ## Examples
 
-See [TizenTube](https://github.com/reisxd/TizenTube) for an example of an site modification module and [Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish) for an example of an application module.
+See [TizenTube](https://github.com/dskja/TizenTube) for an example of an site modification module and [Jellyfin-Tizen](https://github.com/GlenLowland/jellyfin-tizen-npm-publish) for an example of an application module.

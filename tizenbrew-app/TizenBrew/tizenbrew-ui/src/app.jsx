@@ -18,8 +18,6 @@ export default function App() {
   const [headerHeight, setHeaderHeight] = useState(0);
   const context = useContext(GlobalStateContext);
   const { t } = useTranslation();
-  window.dispatch = context.dispatch;
-  window.state = context.state;
 
   useEffect(() => {
     if (context.state.sharedData.error.disappear) {
@@ -35,7 +33,9 @@ export default function App() {
     }
   }, [context.state.sharedData.error.disappear]);
   useEffect(() => {
-    setHeaderHeight(headerRef.current.base.clientHeight);
+    if (headerRef.current && headerRef.current.base) {
+      setHeaderHeight(headerRef.current.base.clientHeight);
+    }
   }, [headerRef]);
 
   useEffect(() => {

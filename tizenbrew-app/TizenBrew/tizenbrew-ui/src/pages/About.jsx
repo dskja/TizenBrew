@@ -1,6 +1,8 @@
 import TBLogo from '../assets/tizenbrew.svg';
+import { useTranslation } from 'react-i18next';
 
 export default function About() {
+    const { t } = useTranslation();
     const tizenVersion = tizen.systeminfo.getCapability('http://tizen.org/feature/platform.version');
     const tvModel = tizen.systeminfo.getCapability('http://tizen.org/system/model_name');
     const appVersion = tizen.application.getCurrentApplication().appInfo.version;
@@ -9,9 +11,9 @@ export default function About() {
         <div className="flex justify-center align-center">
             <div className="flex flex-col items-center">
                 <img src={TBLogo} className="h-[24vh] w-auto mt-16" />
-                <p className="text-gray-300 mt-4 text-base/7">App Version: {appVersion}</p>
-                <p className="text-gray-300 mt-4 text-base/7">Tizen Version: {tizenVersion}</p>
-                <p className="text-gray-300 mt-4 text-base/7">TV Model: {tvModel}</p>
+                <p className="text-gray-300 mt-4 text-base/7">{t('about.appVersion')}: {appVersion}</p>
+                <p className="text-gray-300 mt-4 text-base/7">{t('about.tizenVersion')}: {tizenVersion}</p>
+                <p className="text-gray-300 mt-4 text-base/7">{t('about.tvModel')}: {tvModel}</p>
             </div>
         </div>
     )

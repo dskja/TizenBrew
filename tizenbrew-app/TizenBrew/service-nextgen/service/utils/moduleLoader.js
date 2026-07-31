@@ -7,7 +7,10 @@ function loadModules() {
 
     const modulePromises = modules.map(module => {
         return fetch(`https://cdn.jsdelivr.net/${module}/package.json`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error(`Failed to fetch module ${module}: ${res.status}`);
+                return res.json();
+            })
             .then(moduleJson => {
                 let moduleData;
                 const splitData = [
