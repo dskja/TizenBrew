@@ -29,6 +29,7 @@ function startService(mdl, services) {
             try {
                 vm.runInContext(script, services.get(mdl.fullName).context);
             } catch (e) {
+                console.error(`Service ${mdl.fullName} crashed:`, e);
                 services.get(mdl.fullName).hasCrashed = true;
                 services.get(mdl.fullName).error = e;
             }

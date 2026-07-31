@@ -90,7 +90,8 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
                 }
             }
             if (!isAnotherApp) inDebug.webDebug = true;
-            appControlData = null;
+            appControlData.module = null;
+            appControlData.args = null;
         }).on('error', (err) => {
             if (attempts >= 15) {
                 if (!isAnotherApp) {

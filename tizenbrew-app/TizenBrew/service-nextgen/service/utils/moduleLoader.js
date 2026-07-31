@@ -9,7 +9,6 @@ function loadModules() {
         return fetch(`https://cdn.jsdelivr.net/${module}/package.json`)
             .then(res => res.json())
             .then(moduleJson => {
-                console
                 let moduleData;
                 const splitData = [
                     module.substring(0, module.indexOf('/')),
