@@ -252,7 +252,7 @@ export default function ModuleStore() {
                     </>
                 )}
 
-                {filteredModules.length === 0 && storeModules.length > 0 && (
+                {filteredModules.length === 0 && storeModules && storeModules.length > 0 && (
                     <p className="text-gray-400 text-base/7 mt-8">{t('store.noResults')}</p>
                 )}
 

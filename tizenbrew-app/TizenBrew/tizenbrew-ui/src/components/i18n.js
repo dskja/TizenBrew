@@ -7,7 +7,7 @@ try {
     i18n
       .use(initReactI18next)
       .init({
-        lng: locale.language.replace(/[_-].*/, ''),
+        lng: locale.language.replace(/_/g, '-').toLowerCase(),
         fallbackLng: 'en',
         resources,
         debug: false,
@@ -19,7 +19,7 @@ try {
     i18n
       .use(initReactI18next)
       .init({
-        lng: navigator.language.replace(/[_-].*/, ''),
+        lng: navigator.language.replace(/_/g, '-').toLowerCase(),
         fallbackLng: 'en',
         resources,
         debug: false,

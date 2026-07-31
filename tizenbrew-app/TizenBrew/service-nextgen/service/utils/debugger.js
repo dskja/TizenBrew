@@ -4,7 +4,13 @@ const CDP = require('chrome-remote-interface');
 const fetch = require('node-fetch');
 const { Events } = require('./wsCommunication.js');
 const { readConfig } = require('./configuration.js');
-const WebSocket = require('ws');
+
+let WebSocket;
+if (process.version === 'v4.4.3') {
+    WebSocket = require('ws-old');
+} else {
+    WebSocket = require('ws-new');
+}
 
 const modulesCache = new Map();
 
@@ -123,10 +129,12 @@ function startDebugging(port, queuedEvents, clientConn, ip, mdl, inDebug, appCon
     }
 }
 
-function sendClientInformation(clientConn, data) {
+function sendClientInformation(clientConn, data, retries) {
+    if (!retries) retries = 0;
+    if (retries >= 100) return;
     const clientConnection = clientConn.get('wsConn');
-    if ((clientConnection && clientConnection.connection && (clientConnection.connection.readyState !== WebSocket.OPEN && !clientConnection.isReady)) || !clientConnection) {
-        return setTimeout(() => sendClientInformation(clientConn, data), 50);
+    if (!clientConnection || (clientConnection.connection && (clientConnection.connection.readyState !== WebSocket.OPEN || !clientConnection.isReady))) {
+        return setTimeout(() => sendClientInformation(clientConn, data, retries + 1), 50);
     }
     setTimeout(() => {
         clientConnection.send(data);

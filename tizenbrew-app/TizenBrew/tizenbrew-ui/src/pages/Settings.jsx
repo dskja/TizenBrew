@@ -50,7 +50,8 @@ export default function Settings() {
         <div className="relative isolate lg:px-8">
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
                 <ItemBasic onClick={() => {
-                    if (state.sharedData.modules?.length === 0) return alert(t('settings.noModules'));
+                    var mods = state.sharedData.modules;
+                    if (!mods || mods.length === 0) return alert(t('settings.noModules'));
                     loc.route('/tizenbrew-ui/dist/index.html/settings/change?type=autolaunch');
                 }}>
                     <h3 className='text-indigo-400 text-base/7 font-semibold'>
@@ -61,7 +62,8 @@ export default function Settings() {
                     </p>
                 </ItemBasic>
                 <ItemBasic onClick={() => {
-                    if (state.sharedData.modules?.length === 0) return alert(t('settings.noModules'));
+                    var mods = state.sharedData.modules;
+                    if (!mods || mods.length === 0) return alert(t('settings.noModules'));
                     loc.route('/tizenbrew-ui/dist/index.html/settings/change?type=autolaunchService');
                 }}>
                     <h3 className='text-indigo-400 text-base/7 font-semibold'>
@@ -94,10 +96,10 @@ function Change() {
     return (
         <div className="relative isolate lg:px-8">
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
-                {state?.sharedData?.modules?.map((module, idx) => {
+                {state && state.sharedData && state.sharedData.modules && state.sharedData.modules.map((module, idx) => {
                     if (loc.query.type === 'autolaunchService' && !module.serviceFile) return null;
                     return (
-                        <ItemBasic state={state}
+                        <ItemBasic
                             shouldFocus={idx === 0}
                             key={idx}
                             onClick={() => {
@@ -125,7 +127,7 @@ function Change() {
                     )
                 })}
                 <ItemBasic
-                    shouldFocus={state?.sharedData?.modules?.length === 0}
+                    shouldFocus={(!state || !state.sharedData || !state.sharedData.modules || state.sharedData.modules.length === 0)}
                     onClick={() => {
                         if (confirm(t('settings.disableAutolaunchPrompt'))) {
                             state.client.send({

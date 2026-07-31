@@ -1,3 +1,5 @@
+"use strict";
+
 const { readConfig } = require('./configuration.js');
 const fetch = require('node-fetch');
 
