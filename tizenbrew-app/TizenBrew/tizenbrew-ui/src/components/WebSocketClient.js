@@ -10,7 +10,10 @@ const Events = {
     GetServiceStatuses: 7,
     Error: 8,
     CanLaunchModules: 9,
-    ModuleAction: 10
+    ModuleAction: 10,
+    BrowseModules: 11,
+    CheckUpdates: 12,
+    UpdateModule: 13
 };
 
 class Client {
@@ -197,6 +200,25 @@ class Client {
 
                 break;
             }
+            case Events.BrowseModules: {
+                this.context.dispatch({
+                    type: 'SET_STORE_MODULES',
+                    payload
+                });
+                break;
+            }
+            case Events.CheckUpdates: {
+                this.context.dispatch({
+                    type: 'SET_MODULE_UPDATES',
+                    payload
+                });
+                break;
+            }
+            case Events.UpdateModule: {
+                this.send({ type: Events.GetModules, payload: true });
+                this.send({ type: Events.CheckUpdates });
+                break;
+            }
         }
     }
 
@@ -264,6 +286,18 @@ class Client {
 
     send(data) {
         this.socket.send(JSON.stringify(data));
+    }
+
+    browseModules() {
+        this.send({ type: Events.BrowseModules });
+    }
+
+    checkUpdates() {
+        this.send({ type: Events.CheckUpdates });
+    }
+
+    updateModule(fullName) {
+        this.send({ type: Events.UpdateModule, payload: fullName });
     }
 }
 

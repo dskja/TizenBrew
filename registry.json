@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "categories": {
+    "video": "Video & Streaming",
+    "music": "Music",
+    "utility": "Utilities",
+    "social": "Social",
+    "gaming": "Gaming"
+  },
+  "modules": [
+    {
+      "id": "npm/@dskja/tizentube",
+      "name": "TizenTube",
+      "description": "YouTube mod for Tizen TVs with ad blocking, sponsor block, DeArrow, custom playback speed, and more",
+      "category": "video",
+      "tags": ["youtube", "adblock", "sponsorblock", "dearrow"],
+      "featured": true
+    },
+    {
+      "id": "npm/@dskja/tizentwitch",
+      "name": "TizenTwitch",
+      "description": "Twitch mod for Tizen TVs with ad blocking, chat support, and Twitch theme",
+      "category": "video",
+      "tags": ["twitch", "adblock", "chat"],
+      "featured": true
+    }
+  ]
+}

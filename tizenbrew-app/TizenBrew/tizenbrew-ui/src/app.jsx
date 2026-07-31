@@ -1,6 +1,7 @@
 import { LocationProvider, ErrorBoundary, Router, Route } from 'preact-iso';
 import Home from './pages/Home.jsx';
 import ModuleManager, { AddModule } from './pages/ModuleManager.jsx';
+import ModuleStore from './pages/ModuleStore.jsx';
 import Header from './components/Header.jsx';
 import { GlobalStateContext } from './components/ClientContext.jsx';
 import { useRef } from 'preact/hooks';
@@ -63,6 +64,7 @@ export default function App() {
             <Route component={Home} path="/tizenbrew-ui/dist/index.html" />
             <Route component={ModuleManager} path="/tizenbrew-ui/dist/index.html/module-manager" />
             <Route component={AddModule} path="/tizenbrew-ui/dist/index.html/module-manager/add" />
+            <Route component={ModuleStore} path="/tizenbrew-ui/dist/index.html/store" />
             <Route component={Settings} path="/tizenbrew-ui/dist/index.html/settings" />
             <Route component={Change} path="/tizenbrew-ui/dist/index.html/settings/change" />
             <Route component={UserAgentSettings} path="/tizenbrew-ui/dist/index.html/settings/change-ua" />

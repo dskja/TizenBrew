@@ -9,6 +9,8 @@ const initialState = {
             tizenDebug: false
         },
         modules: null,
+        storeModules: null,
+        moduleUpdates: null,
         state: null,
         error: {
             message: null,
@@ -27,6 +29,10 @@ function reducer(state, action) {
             return { ...state, client: action.payload };
         case 'SET_MODULES':
             return { ...state, sharedData: { ...state.sharedData, modules: action.payload } };
+        case 'SET_STORE_MODULES':
+            return { ...state, sharedData: { ...state.sharedData, storeModules: action.payload } };
+        case 'SET_MODULE_UPDATES':
+            return { ...state, sharedData: { ...state.sharedData, moduleUpdates: action.payload } };
         case 'SET_DEBUG_STATUS':
             return { ...state, sharedData: { ...state.sharedData, debugStatus: action.payload } };
         case 'SET_STATE':

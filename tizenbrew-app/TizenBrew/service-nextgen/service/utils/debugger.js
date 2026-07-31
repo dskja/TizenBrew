@@ -133,4 +133,13 @@ function sendClientInformation(clientConn, data) {
     }, 500);
 }
 
+function clearModuleCache(fullName) {
+    if (fullName) {
+        modulesCache.delete(fullName);
+    } else {
+        modulesCache.clear();
+    }
+}
+
 module.exports = startDebugging;
+module.exports.clearModuleCache = clearModuleCache;

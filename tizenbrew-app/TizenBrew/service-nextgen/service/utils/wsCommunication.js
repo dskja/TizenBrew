@@ -28,7 +28,10 @@ const Events = {
     GetServiceStatuses: 7,
     Error: 8,
     CanLaunchModules: 9,
-    ModuleAction: 10
+    ModuleAction: 10,
+    BrowseModules: 11,
+    CheckUpdates: 12,
+    UpdateModule: 13
 };
 
 module.exports = {

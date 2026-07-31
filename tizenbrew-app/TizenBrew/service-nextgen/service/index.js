@@ -9,8 +9,10 @@ module.exports.onStart = function () {
     const { readConfig, writeConfig } = require('./utils/configuration.js');
     const loadModules = require('./utils/moduleLoader.js');
     const startDebugging = require('./utils/debugger.js');
+    const clearModuleCache = startDebugging.clearModuleCache;
     const startService = require('./utils/serviceLauncher.js');
     const { Connection, Events } = require('./utils/wsCommunication.js');
+    const { browseModules, checkForUpdates } = require('./utils/moduleRegistry.js');
     let WebSocket;
     if (process.version === 'v4.4.3') {
         WebSocket = require('ws-old');
@@ -277,6 +279,35 @@ module.exports.onStart = function () {
                             break;
                         }
                     }
+                    break;
+                }
+                case Events.BrowseModules: {
+                    var installedNames = modulesCache ? modulesCache.map(function(m) { return m.fullName; }) : [];
+                    browseModules(installedNames).then(function(result) {
+                        wsConn.send(wsConn.Event(Events.BrowseModules, result));
+                    }).catch(function(e) {
+                        wsConn.send(wsConn.Event(Events.Error, 'Failed to browse modules: ' + e.message));
+                    });
+                    break;
+                }
+                case Events.CheckUpdates: {
+                    if (!modulesCache) {
+                        wsConn.send(wsConn.Event(Events.CheckUpdates, []));
+                        break;
+                    }
+                    checkForUpdates(modulesCache).then(function(updates) {
+                        wsConn.send(wsConn.Event(Events.CheckUpdates, updates));
+                    }).catch(function(e) {
+                        wsConn.send(wsConn.Event(Events.Error, 'Failed to check for updates: ' + e.message));
+                    });
+                    break;
+                }
+                case Events.UpdateModule: {
+                    clearModuleCache(payload);
+                    loadModules().then(function(modules) {
+                        modulesCache = modules;
+                        wsConn.send(wsConn.Event(Events.UpdateModule, null));
+                    });
                     break;
                 }
                 case Events.Ready: {

@@ -1,4 +1,4 @@
-import { Cog6ToothIcon, ArchiveBoxIcon, HomeIcon, QuestionMarkCircleIcon } from '@heroicons/react/16/solid';
+import { Cog6ToothIcon, ArchiveBoxIcon, HomeIcon, QuestionMarkCircleIcon, ShoppingBagIcon } from '@heroicons/react/16/solid';
 import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 import { useEffect, useContext } from 'preact/hooks';
 import { useLocation } from 'preact-iso';
@@ -59,6 +59,9 @@ export default function Header() {
                     </Button>
                     <Button route="/module-manager">
                         <ArchiveBoxIcon className="h-[4vh] w-[2vw]" />
+                    </Button>
+                    <Button route="/store">
+                        <ShoppingBagIcon className="h-[4vh] w-[2vw]" />
                     </Button>
                     <Button route="/about">
                         <QuestionMarkCircleIcon className="h-[4vh] w-[2vw]" />

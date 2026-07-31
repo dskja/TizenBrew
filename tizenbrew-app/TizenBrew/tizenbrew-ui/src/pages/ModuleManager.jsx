@@ -9,7 +9,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-function Item({ children, module, id, state }) {
+function Item({ children, module, id, state, hasUpdate }) {
     const { t } = useTranslation();
     const { ref, focused } = useFocusable();
       useEffect(() => {
@@ -54,6 +54,11 @@ function Item({ children, module, id, state }) {
             )}
         >
             {children}
+            {hasUpdate && (
+                <div className="absolute top-2 right-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-full">
+                    {t('store.updateAvailable')}
+                </div>
+            )}
         </div>
     );
 }
@@ -88,11 +93,46 @@ export default function ModuleManager() {
     const loc = useLocation();
     const { t } = useTranslation();
 
+    var moduleUpdates = state?.sharedData?.moduleUpdates || [];
+
+    function hasModuleUpdate(fullName) {
+        return moduleUpdates.some(function(u) { return u.fullName === fullName && u.updateAvailable; });
+    }
+
+    function handleUpdateAll() {
+        moduleUpdates.forEach(function(u) {
+            if (u.updateAvailable) {
+                state.client.updateModule(u.fullName);
+            }
+        });
+    }
+
+    function handleRefresh() {
+        state.client.send({ type: Events.GetModules, payload: true });
+        state.client.checkUpdates();
+    }
+
     return (
         <div className="relative isolate lg:px-8">
+            <div className="flex justify-end gap-4 mb-4 mr-4">
+                {moduleUpdates.length > 0 && (
+                    <button
+                        onClick={handleUpdateAll}
+                        className="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-lg text-base/7"
+                    >
+                        {t('store.updateAll')} ({moduleUpdates.length})
+                    </button>
+                )}
+                <button
+                    onClick={handleRefresh}
+                    className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg text-base/7"
+                >
+                    {t('store.refresh')}
+                </button>
+            </div>
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
                 {state?.sharedData?.modules?.map((module, moduleIdx) => (
-                    <Item key={moduleIdx} module={module} id={moduleIdx} state={state}>
+                    <Item key={moduleIdx} module={module} id={moduleIdx} state={state} hasUpdate={hasModuleUpdate(module.fullName)}>
                         <h3
                             className='text-indigo-400 text-base/7 font-semibold'
                         >

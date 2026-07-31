@@ -45,6 +45,28 @@
         "tizenVersion": "Tizen Version",
         "tvModel": "TV Model"
     },
+    "store": {
+        "install": "Install",
+        "installed": "Installed",
+        "update": "Update",
+        "updateAll": "Update All",
+        "updateAvailable": "Update Available",
+        "refresh": "Refresh",
+        "featured": "Featured",
+        "featuredSection": "Featured Modules",
+        "allModules": "All Modules",
+        "searchPlaceholder": "Search modules...",
+        "noResults": "No modules found.",
+        "loading": "Loading modules...",
+        "category": {
+            "all": "All",
+            "video": "Video & Streaming",
+            "music": "Music",
+            "utility": "Utilities",
+            "social": "Social",
+            "gaming": "Gaming"
+        }
+    },
     "__contributors": [
         "dskja"
     ]
