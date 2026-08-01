@@ -10,7 +10,7 @@ var configPath = (typeof tizen !== 'undefined')
 
 function readConfig() {
     var defaultConfig = {
-        modules: ["npm/@dskja/tizentube"],
+        modules: ["gh/dskja/TizenBrew-Twitch"],
         autoLaunchServiceList: [],
         autoLaunchModule: '', 
     };
