@@ -131,6 +131,31 @@ function SearchBar({ value, onChange, onSearch, t }) {
     );
 }
 
+function ActionButton({ children, onClick, className }) {
+    const { ref, focused } = useFocusable();
+    useEffect(() => {
+        if (focused) {
+            ref.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center',
+            });
+        }
+    }, [focused, ref]);
+    return (
+        <button
+            ref={ref}
+            onClick={onClick}
+            className={classNames(
+                className,
+                focused ? 'focus ring-2 ring-indigo-400' : ''
+            )}
+        >
+            {children}
+        </button>
+    );
+}
+
 function CategoryButton({ category, label, active, onClick, t }) {
     const { ref, focused } = useFocusable();
 
@@ -155,6 +180,8 @@ export default function ModuleStore() {
     const [searchQuery, setSearchQuery] = useState('');
     const [activeCategory, setActiveCategory] = useState('all');
     const [filteredModules, setFilteredModules] = useState([]);
+    const [storeError, setStoreError] = useState(null);
+    const [retryCount, setRetryCount] = useState(0);
 
     var storeData = state && state.sharedData ? state.sharedData.storeModules : null;
     var storeModules = (storeData && storeData.modules) || [];
@@ -164,11 +191,28 @@ export default function ModuleStore() {
     var isLoading = !storeData || !storeData.modules;
 
     useEffect(() => {
+        if (state && state.sharedData && state.sharedData.error && state.sharedData.error.message) {
+            var errMsg = state.sharedData.error.message;
+            if (errMsg.indexOf('browse modules') !== -1 || errMsg.indexOf('Failed to fetch') !== -1) {
+                setStoreError(errMsg);
+            }
+        }
+    }, [state && state.sharedData && state.sharedData.error]);
+
+    useEffect(() => {
         if (state && state.client) {
+            setStoreError(null);
             state.client.browseModules();
             state.client.checkUpdates();
         }
-    }, [state && state.client]);
+    }, [state && state.client, retryCount]);
+
+    useEffect(() => {
+        if (storeError) {
+            var timer = setTimeout(function() { setStoreError(null); setRetryCount(function(c) { return c + 1; }); }, 5000);
+            return function() { clearTimeout(timer); };
+        }
+    }, [storeError]);
 
     useEffect(() => {
         if (!storeModules) return;
@@ -273,6 +317,12 @@ export default function ModuleStore() {
                     <div className="flex flex-col items-center gap-4 mt-8">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
                         <p className="text-gray-400 text-base/7">{t('store.loading')}</p>
+                        <ActionButton 
+                            onClick={function() { setStoreError(null); setRetryCount(function(c) { return c + 1; }); }}
+                            className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg text-base/7 mt-4"
+                        >
+                            {t('store.refresh')}
+                        </ActionButton>
                     </div>
                 )}
 
