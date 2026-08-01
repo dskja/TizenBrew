@@ -14,7 +14,6 @@ function ItemBasic({ children, onClick, shouldFocus }) {
     useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });

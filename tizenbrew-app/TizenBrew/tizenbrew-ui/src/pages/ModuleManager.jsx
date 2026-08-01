@@ -15,7 +15,6 @@ function Item({ children, module, id, state, hasUpdate }) {
       useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -68,7 +67,6 @@ function ItemBasic({ children, onClick }) {
       useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -93,7 +91,6 @@ function ActionButton({ children, onClick, className }) {
     useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -105,7 +102,7 @@ function ActionButton({ children, onClick, className }) {
             onClick={onClick}
             className={classNames(
                 className,
-                focused ? 'focus ring-2 ring-indigo-400' : ''
+                focused ? 'focus' : ''
             )}
         >
             {children}

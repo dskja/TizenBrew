@@ -15,7 +15,6 @@ function StoreItem({ module, id, state, isInstalled, hasUpdate }) {
     useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -102,7 +101,6 @@ function SearchBar({ value, onChange, onSearch, t }) {
     useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -136,7 +134,6 @@ function ActionButton({ children, onClick, className }) {
     useEffect(() => {
         if (focused) {
             ref.current.scrollIntoView({
-                behavior: 'smooth',
                 block: 'center',
                 inline: 'center',
             });
@@ -148,7 +145,7 @@ function ActionButton({ children, onClick, className }) {
             onClick={onClick}
             className={classNames(
                 className,
-                focused ? 'focus ring-2 ring-indigo-400' : ''
+                focused ? 'focus' : ''
             )}
         >
             {children}
@@ -208,11 +205,11 @@ export default function ModuleStore() {
     }, [state && state.client, retryCount]);
 
     useEffect(() => {
-        if (storeError) {
+        if (storeError && retryCount < 3) {
             var timer = setTimeout(function() { setStoreError(null); setRetryCount(function(c) { return c + 1; }); }, 5000);
             return function() { clearTimeout(timer); };
         }
-    }, [storeError]);
+    }, [storeError, retryCount]);
 
     useEffect(() => {
         if (!storeModules) return;
@@ -315,7 +312,6 @@ export default function ModuleStore() {
 
                 {isLoading && (
                     <div className="flex flex-col items-center gap-4 mt-8">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
                         <p className="text-gray-400 text-base/7">{t('store.loading')}</p>
                         <ActionButton 
                             onClick={function() { setStoreError(null); setRetryCount(function(c) { return c + 1; }); }}
