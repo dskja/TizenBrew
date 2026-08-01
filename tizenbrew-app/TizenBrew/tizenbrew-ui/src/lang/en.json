@@ -44,7 +44,24 @@
     "about": {
         "appVersion": "App Version",
         "tizenVersion": "Tizen Version",
-        "tvModel": "TV Model"
+        "tvModel": "TV Model",
+        "deviceInfo": "Device Information",
+        "displayInfo": "Display & Graphics",
+        "manufacturer": "Manufacturer",
+        "firmware": "Firmware",
+        "cpuArch": "CPU Architecture",
+        "screenResolution": "Screen Resolution",
+        "dpi": "DPI",
+        "webApiVersion": "Web API Version",
+        "networkType": "Network Type",
+        "bluetooth": "Bluetooth",
+        "uiLanguage": "UI Language",
+        "aboutTizenBrew": "About TizenBrew",
+        "aboutDescription": "TizenBrew is a modular system that lets you experience modded websites and install newer apps on your Samsung TV without dealing with Tizen Studio multiple times.",
+        "openSource": "Open Source",
+        "modular": "Modular",
+        "lightweight": "Lightweight",
+        "madeWithLove": "Made with love by the TizenBrew community"
     },
     "store": {
         "install": "Install",

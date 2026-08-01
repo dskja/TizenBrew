@@ -40,6 +40,51 @@
         "language": "Spracheinstellungen",
         "languageDesc": "Ändere die Sprache der App."
     },
+    "about": {
+        "appVersion": "App-Version",
+        "tizenVersion": "Tizen-Version",
+        "tvModel": "TV-Modell",
+        "deviceInfo": "Geräteinformationen",
+        "displayInfo": "Display & Grafik",
+        "manufacturer": "Hersteller",
+        "firmware": "Firmware",
+        "cpuArch": "CPU-Architektur",
+        "screenResolution": "Bildschirmauflösung",
+        "dpi": "DPI",
+        "webApiVersion": "Web-API-Version",
+        "networkType": "Netzwerktyp",
+        "bluetooth": "Bluetooth",
+        "uiLanguage": "UI-Sprache",
+        "aboutTizenBrew": "Über TizenBrew",
+        "aboutDescription": "TizenBrew ist ein modulares System, mit dem du modifizierte Websites und neuere Apps auf deinem Samsung TV erleben kannst, ohne dich mehrfach mit Tizen Studio herumschlagen zu müssen.",
+        "openSource": "Open Source",
+        "modular": "Modular",
+        "lightweight": "Leichtgewichtig",
+        "madeWithLove": "Mit Liebe gemacht von der TizenBrew-Community"
+    },
+    "store": {
+        "install": "Installieren",
+        "installed": "Installiert",
+        "uninstall": "Deinstallieren",
+        "update": "Aktualisieren",
+        "updateAll": "Alle aktualisieren",
+        "updateAvailable": "Update verfügbar",
+        "refresh": "Aktualisieren",
+        "featured": "Empfohlen",
+        "featuredSection": "Empfohlene Module",
+        "allModules": "Alle Module",
+        "searchPlaceholder": "Module suchen...",
+        "noResults": "Keine Module gefunden.",
+        "loading": "Module werden geladen...",
+        "category": {
+            "all": "Alle",
+            "video": "Video & Streaming",
+            "music": "Musik",
+            "utility": "Werkzeuge",
+            "social": "Sozial",
+            "gaming": "Gaming"
+        }
+    },
     "__contributors": [
         "zexalgames",
         "leanyn"
