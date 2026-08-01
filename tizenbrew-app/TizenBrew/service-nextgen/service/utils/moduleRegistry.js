@@ -3,9 +3,25 @@
 const fetch = require('node-fetch');
 
 const REGISTRY_URL = 'https://raw.githubusercontent.com/dskja/TizenBrew/main/registry.json';
+const FETCH_TIMEOUT = 15000;
+
+function fetchWithTimeout(url, options) {
+    return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function() {
+            reject(new Error('Request timeout: ' + url));
+        }, FETCH_TIMEOUT);
+        fetch(url, options).then(function(res) {
+            clearTimeout(timer);
+            resolve(res);
+        }).catch(function(err) {
+            clearTimeout(timer);
+            reject(err);
+        });
+    });
+}
 
 function browseModules(installedModuleNames) {
-    return fetch(REGISTRY_URL)
+    return fetchWithTimeout(REGISTRY_URL)
         .then(res => {
             if (!res.ok) throw new Error('Failed to fetch registry: ' + res.status);
             return res.json();
@@ -15,7 +31,7 @@ function browseModules(installedModuleNames) {
                 return { categories: [], modules: [] };
             }
             var modulePromises = registry.modules.map(function(mod) {
-                return fetch('https://cdn.jsdelivr.net/' + mod.id + '/package.json')
+                return fetchWithTimeout('https://cdn.jsdelivr.net/' + mod.id + '/package.json')
                     .then(function(res) {
                         if (!res.ok) throw new Error('Failed to fetch package.json for ' + mod.id);
                         return res.json();
@@ -81,7 +97,7 @@ function checkForUpdates(installedModules) {
             fetchUrl = 'https://cdn.jsdelivr.net/' + packageName + '/package.json';
         }
 
-        return fetch(fetchUrl)
+        return fetchWithTimeout(fetchUrl)
             .then(function(res) {
                 if (!res.ok) throw new Error('Failed to fetch version info: ' + res.status);
                 if (isNpm) {

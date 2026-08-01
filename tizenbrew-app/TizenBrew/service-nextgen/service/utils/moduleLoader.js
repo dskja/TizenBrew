@@ -3,6 +3,23 @@
 const { readConfig } = require('./configuration.js');
 const fetch = require('node-fetch');
 
+const FETCH_TIMEOUT = 15000;
+
+function fetchWithTimeout(url, options) {
+    return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function() {
+            reject(new Error('Request timeout: ' + url));
+        }, FETCH_TIMEOUT);
+        fetch(url, options).then(function(res) {
+            clearTimeout(timer);
+            resolve(res);
+        }).catch(function(err) {
+            clearTimeout(timer);
+            reject(err);
+        });
+    });
+}
+
 function loadModules() {
     const config = readConfig();
     const modules = config.modules;
@@ -14,7 +31,7 @@ function loadModules() {
     }
 
     const modulePromises = modules.map(module => {
-        return fetch(`https://cdn.jsdelivr.net/${module}/package.json`)
+        return fetchWithTimeout(`https://cdn.jsdelivr.net/${module}/package.json`)
             .then(res => {
                 if (!res.ok) throw new Error(`Failed to fetch module ${module}: ${res.status}`);
                 return res.json();
