@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "categories": {
     "video": "Video & Streaming",
     "music": "Music",
@@ -9,19 +9,11 @@
   },
   "modules": [
     {
-      "id": "npm/@dskja/tizentube",
-      "name": "TizenTube",
-      "description": "YouTube mod for Tizen TVs with ad blocking, sponsor block, DeArrow, custom playback speed, and more",
-      "category": "video",
-      "tags": ["youtube", "adblock", "sponsorblock", "dearrow"],
-      "featured": true
-    },
-    {
-      "id": "npm/tizentwitch",
+      "id": "gh/dskja/TizenBrew-Twitch",
       "name": "TizenTwitch",
-      "description": "Twitch mod for Tizen TVs with ad blocking, chat support, and Twitch theme",
+      "description": "Twitch mod for Tizen TVs with ad blocking, chat overlay, Twitch theme, playback controls, CORS bypass proxy, and more",
       "category": "video",
-      "tags": ["twitch", "adblock", "chat"],
+      "tags": ["twitch", "adblock", "chat", "chat-overlay", "cors-bypass", "playback", "theme"],
       "featured": true
     }
   ]
