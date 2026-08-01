@@ -88,6 +88,31 @@ function ItemBasic({ children, onClick }) {
         </div>
     );
 }
+function ActionButton({ children, onClick, className }) {
+    const { ref, focused } = useFocusable();
+    useEffect(() => {
+        if (focused) {
+            ref.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center',
+            });
+        }
+    }, [focused, ref]);
+    return (
+        <button
+            ref={ref}
+            onClick={onClick}
+            className={classNames(
+                className,
+                focused ? 'focus ring-2 ring-indigo-400' : ''
+            )}
+        >
+            {children}
+        </button>
+    );
+}
+
 export default function ModuleManager() {
     const { state } = useContext(GlobalStateContext);
     const loc = useLocation();
@@ -120,19 +145,19 @@ export default function ModuleManager() {
         <div className="relative isolate lg:px-8">
             <div className="flex justify-end gap-4 mb-4 mr-4">
                 {moduleUpdates.length > 0 && (
-                    <button
+                    <ActionButton
                         onClick={handleUpdateAll}
-                        className="bg-purple-600 hover:bg-purple-500 text-white px-6 py-2 rounded-lg text-base/7"
+                        className="bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 rounded-lg text-base/7"
                     >
                         {t('store.updateAll')} ({moduleUpdates.length})
-                    </button>
+                    </ActionButton>
                 )}
-                <button
+                <ActionButton
                     onClick={handleRefresh}
-                    className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg text-base/7"
+                    className="bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg text-base/7"
                 >
                     {t('store.refresh')}
-                </button>
+                </ActionButton>
             </div>
             <div className="mx-auto flex flex-wrap justify-center gap-4 top-4 relative">
                 {state && state.sharedData && state.sharedData.modules && state.sharedData.modules.map((module, moduleIdx) => (
